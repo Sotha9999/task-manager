@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .para{
+        @apply bg-[rgb-(0,255,0)] text-black text-center text-[60px]
+    }
+}
