@@ -27,17 +27,17 @@ const LoginForm = ({ onLoginSuccess }) => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Left Side: Branding/Hero (Visible on md screens and up) */}
+      {/* Left Side: Branding/Hero */}
       <div className="hidden lg:flex w-1/2 bg-blue-600 justify-center items-center p-12">
         <div className="max-w-md text-white">
-          <h1 className="text-5xl font-extrabold mb-6">TaskMaster Pro</h1>
+          <h1 className="text-5xl font-extrabold mb-6">Task Master</h1>
           <p className="text-lg text-blue-100 leading-relaxed">
             Manage your productivity, fulfill data requirements, and track your progress 
             seamlessly with our Google Sheets integrated platform.
           </p>
           <div className="mt-8 flex gap-4">
             <div className="h-1 w-12 bg-white rounded-full"></div>
-            <p className="text-sm font-medium uppercase tracking-wider">Enterprise Edition</p>
+            <p className="text-sm font-medium uppercase tracking-wider">Developed by: Mr. In Sotha</p>
           </div>
         </div>
       </div>
@@ -51,15 +51,16 @@ const LoginForm = ({ onLoginSuccess }) => {
           
           <div className="bg-white p-10 rounded-2xl shadow-xl border border-gray-100">
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-800">Welcome Back</h2>
-              <p className="text-gray-500 mt-2">Please enter your details to access your tasks.</p>
+              <h2 className="text-2xl font-bold text-gray-800">Welcome</h2>
+              <p className="text-gray-500 mt-2">Please enter your credentials to access your tasks.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
                 <input 
-                  className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-400"
+                  // Added text-black here
+                  className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-black placeholder:text-gray-400"
                   type="email" 
                   placeholder="name@company.com"
                   onChange={(e) => setEmail(e.target.value)} 
@@ -73,7 +74,8 @@ const LoginForm = ({ onLoginSuccess }) => {
                   <a href="#" className="text-sm font-semibold text-blue-600 hover:underline">Forgot?</a>
                 </div>
                 <input 
-                  className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  // Added text-black here
+                  className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-black"
                   type="password" 
                   placeholder="••••••••"
                   onChange={(e) => setPassword(e.target.value)} 
@@ -85,13 +87,13 @@ const LoginForm = ({ onLoginSuccess }) => {
                 disabled={loading}
                 className="w-full bg-blue-600 text-white p-4 rounded-xl font-bold text-lg hover:bg-blue-700 active:scale-[0.98] transition-all disabled:bg-blue-300 shadow-lg shadow-blue-200"
               >
-                {loading ? "Verifying..." : "Sign In to Dashboard"}
+                {loading ? "Verifying..." : "Sign In"}
               </button>
             </form>
           </div>
           
           <p className="mt-8 text-center text-gray-400 text-sm">
-            &copy; 2026 TaskMaster Inc. All rights reserved.
+            &copy; 2026 TaskMaster. All rights reserved.
           </p>
         </div>
       </div>
