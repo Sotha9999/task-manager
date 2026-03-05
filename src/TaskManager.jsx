@@ -20,7 +20,6 @@ const TaskManager = ({ onLogout }) => {
 
   const SCRIPT_URL = import.meta.env.VITE_SCRIPT_URL;
 
-  // --- Date Correction Logic (Prevents -1 Day Error) ---
   const getExactDate = (dateStr) => {
     if (!dateStr || typeof dateStr !== 'string') return '';
     const date = new Date(dateStr);
@@ -97,30 +96,30 @@ const TaskManager = ({ onLogout }) => {
     <div className="min-h-screen bg-slate-50 p-4 md:p-12 font-sans text-slate-900">
       <div className="max-w-6xl mx-auto">
         
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        {/* Header - Stacked on mobile, row on desktop */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div>
             <h1 className="text-3xl font-black tracking-tight text-indigo-700">TaskFlow <span className="text-slate-400">Pro</span></h1>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Enterprise Asset Management</p>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
             <input 
-              placeholder="Filter by title, desc, or progress..."
+              placeholder="Filter tasks..."
               className="w-full md:w-80 px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 bg-white shadow-sm text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button onClick={onLogout} className="px-5 py-2.5 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-red-50 hover:text-red-600 transition-all shadow-sm text-sm">
+            <button onClick={onLogout} className="w-full sm:w-auto px-5 py-2.5 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-red-50 hover:text-red-600 transition-all shadow-sm text-sm">
               Logout
             </button>
           </div>
         </div>
 
-        {/* Input Form */}
-        <form onSubmit={handleSubmit} className={`p-6 md:p-8 rounded-3xl border transition-all duration-300 ${editId ? 'bg-indigo-50 border-indigo-200 shadow-xl' : 'bg-white border-slate-200 shadow-sm'} mb-10`}>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="md:col-span-2">
+        {/* Input Form - Grid columns adjust automatically */}
+        <form onSubmit={handleSubmit} className={`p-5 md:p-8 rounded-3xl border transition-all duration-300 ${editId ? 'bg-indigo-50 border-indigo-200 shadow-xl' : 'bg-white border-slate-200 shadow-sm'} mb-10`}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div className="sm:col-span-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Task Objective</label>
               <input required value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 font-medium" placeholder="Ex: Quarterly Audit" />
             </div>
@@ -139,14 +138,14 @@ const TaskManager = ({ onLogout }) => {
               </select>
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-2 block">Full Description</label>
               <textarea rows="2" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 text-sm resize-none" placeholder="Provide background details..." />
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-2 block">Progress Update</label>
-              <textarea rows="2" value={formData.progressUpdate} onChange={(e) => setFormData({...formData, progressUpdate: e.target.value})} className="w-full px-4 py-3 rounded-xl border-2 border-indigo-100 outline-none focus:border-indigo-500 bg-indigo-50/30 text-sm resize-none" placeholder="Current update for the team..." />
+              <textarea rows="2" value={formData.progressUpdate} onChange={(e) => setFormData({...formData, progressUpdate: e.target.value})} className="w-full px-4 py-3 rounded-xl border-2 border-indigo-100 outline-none focus:border-indigo-500 bg-indigo-50/30 text-sm resize-none" placeholder="Current update..." />
             </div>
 
             <div>
@@ -158,7 +157,7 @@ const TaskManager = ({ onLogout }) => {
               <input type="date" value={formData.completionDate} onChange={(e) => setFormData({...formData, completionDate: e.target.value})} className="w-full px-3 py-3 rounded-xl border border-slate-200 bg-white text-sm"/>
             </div>
 
-            <div className="md:col-span-4 flex items-end gap-3 pt-2">
+            <div className="sm:col-span-2 md:col-span-4 flex flex-col sm:flex-row items-stretch gap-3 pt-2">
                <button disabled={loading} className={`flex-1 font-bold py-4 rounded-xl shadow-lg transition-all text-sm text-white ${editId ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-600 hover:bg-indigo-700'} disabled:bg-slate-300`}>
                  {loading ? 'PROCESSING...' : editId ? 'UPDATE RECORD' : 'SAVE NEW ENTRY'}
                </button>
@@ -167,8 +166,44 @@ const TaskManager = ({ onLogout }) => {
           </div>
         </form>
 
-        {/* Task List Table */}
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+        {/* --- Responsive Data Presentation --- */}
+        
+        {/* MOBILE VIEW: Card Layout (Visible only on small screens) */}
+        <div className="grid grid-cols-1 gap-4 md:hidden">
+          {filteredTasks.map((task) => (
+            <div key={task.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="flex justify-between items-start mb-3">
+                <StatusBadge status={task.status || 'Pending'} />
+                <PriorityBadge priority={task.priority} />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-1">{task.title}</h3>
+              {task.description && <p className="text-xs text-slate-500 italic mb-3">{task.description}</p>}
+              
+              <div className="bg-slate-50 p-3 rounded-lg mb-4 space-y-2">
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-slate-400 font-bold uppercase">Due Date</span>
+                  <span className="font-bold text-slate-700">{getExactDate(task.dueDate)}</span>
+                </div>
+                {task.completionDate && (
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-emerald-500 font-bold uppercase">Completed</span>
+                    <span className="font-bold text-emerald-700">{getExactDate(task.completionDate)}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button onClick={() => handleEditInitiation(task)} className="text-indigo-600 text-xs font-bold px-3 py-1 bg-indigo-50 rounded-lg">Edit</button>
+                <button onClick={() => handleAction(task.id, 'delete')} className="text-red-400 p-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* DESKTOP VIEW: Table Layout (Hidden on mobile) */}
+        <div className="hidden md:block bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
           <table className="w-full text-left border-collapse">
             <thead className="bg-slate-50 text-slate-400 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
               <tr>
@@ -182,50 +217,31 @@ const TaskManager = ({ onLogout }) => {
             <tbody className="divide-y divide-slate-50">
               {filteredTasks.map((task) => (
                 <tr key={task.id} className="group hover:bg-slate-50/50 transition-colors">
+                  <td className="px-8 py-6"><StatusBadge status={task.status || 'Pending'} /></td>
                   <td className="px-8 py-6">
-                    <StatusBadge status={task.status || 'Pending'} />
-                  </td>
-                  <td className="px-8 py-6">
-                    {/* Title */}
                     <p className="font-bold text-slate-900 text-sm">{task.title}</p>
-                    
-                    {/* Description - Directly after title */}
-                    {task.description && (
-                      <p className="text-[11px] text-slate-500 mt-1 line-clamp-2 italic font-medium leading-relaxed">
-                        {task.description}
-                      </p>
-                    )}
-
-                    {/* Progress Update - Distinct Box */}
+                    {task.description && <p className="text-[11px] text-slate-500 mt-1 line-clamp-2 italic font-medium">{task.description}</p>}
                     {task.progressUpdate && (
                       <div className="mt-3 flex items-center gap-2 bg-indigo-50 border border-indigo-100 px-2 py-1 rounded-md w-fit">
-                        <span className="relative flex h-2 w-2">
+                         <span className="relative flex h-2 w-2">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
                         </span>
-                        <p className="text-[9px] text-indigo-700 font-black uppercase">
-                          Update: {task.progressUpdate}
-                        </p>
+                        <p className="text-[9px] text-indigo-700 font-black uppercase">Update: {task.progressUpdate}</p>
                       </div>
                     )}
                   </td>
-                  <td className="px-8 py-6">
-                     <PriorityBadge priority={task.priority} />
-                  </td>
+                  <td className="px-8 py-6"><PriorityBadge priority={task.priority} /></td>
                   <td className="px-8 py-6">
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2">
                         <span className="text-[9px] font-black text-slate-300 uppercase w-8">Due</span>
-                        <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
-                          {getExactDate(task.dueDate)}
-                        </span>
+                        <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">{getExactDate(task.dueDate)}</span>
                       </div>
                       {task.completionDate && (
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] font-black text-emerald-400 uppercase w-8">Done</span>
-                          <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                            {getExactDate(task.completionDate)}
-                          </span>
+                          <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{getExactDate(task.completionDate)}</span>
                         </div>
                       )}
                     </div>
@@ -242,16 +258,17 @@ const TaskManager = ({ onLogout }) => {
               ))}
             </tbody>
           </table>
-          {filteredTasks.length === 0 && !loading && (
-            <div className="py-20 text-center text-slate-400 text-sm">No matching records found in database.</div>
-          )}
         </div>
+
+        {filteredTasks.length === 0 && !loading && (
+          <div className="py-20 text-center text-slate-400 text-sm">No matching records found.</div>
+        )}
       </div>
     </div>
   );
 };
 
-// UI Components
+// UI Components (Kept same as they are already quite responsive)
 const StatusBadge = ({ status }) => {
   const styles = { 
     'Pending': 'bg-slate-100 text-slate-500 border-slate-200', 
